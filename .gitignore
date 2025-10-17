@@ -1,0 +1,8 @@
+*.pyc
+__pycache__/
+outputs/checkpoints/
+drive/
+*.ipynb_checkpoints
+.env
+.vscode/
+*.pth

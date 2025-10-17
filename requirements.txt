@@ -1,0 +1,11 @@
+mediapipe
+opencv-python
+numpy
+pandas
+torch
+torchaudio
+transformers
+speechrecognition
+sounddevice
+flask
+mlflow
