@@ -1,0 +1,58 @@
+{
+    "training": {
+        "seed": 42,
+        "epochs": 100,
+        "batch_size": 32,
+        "learning_rate": 0.001,
+        "weight_decay": 1e-5,
+        "early_stopping_patience": 10,
+        "lr_scheduler": {
+            "use": true,
+            "factor": 0.5,
+            "patience": 5,
+            "min_lr": 1e-6
+        },
+        "optimizer": "adam",
+        "validation_interval": 1
+    },
+    "lstm": {
+        "hidden_size": 256,
+        "num_layers": 2,
+        "bidirectional": true,
+        "dropout": 0.5
+    },
+    "cnn_lstm": {
+        "conv_channels": [64, 128, 256],
+        "kernel_sizes": [3, 3, 3],
+        "pool_sizes": [2, 2, 2],
+        "lstm_hidden": 256,
+        "lstm_layers": 2,
+        "dropout": 0.5
+    },
+    "transformer": {
+        "d_model": 256,
+        "nhead": 8,
+        "num_encoder_layers": 6,
+        "dim_feedforward": 1024,
+        "dropout": 0.1
+    },
+    "augmentation": {
+        "use": true,
+        "temporal_mask_prob": 0.1,
+        "spatial_jitter_scale": 0.05,
+        "random_rotation_angle": 10,
+        "random_flip": true
+    },
+    "experiment_tracking": {
+        "use_mlflow": true,
+        "use_tensorboard": true,
+        "log_interval": 10,
+        "save_model_interval": 5
+    },
+    "inference": {
+        "threshold": 0.5,
+        "top_k": 5,
+        "smoothing_window": 5,
+        "batch_size": 16
+    }
+}

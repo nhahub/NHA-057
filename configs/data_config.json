@@ -1,0 +1,59 @@
+{
+    "data_paths": {
+        "base_dir": "/content/drive/MyDrive/SignBridge_Data",
+        "metadata": {
+            "train": "/content/drive/MyDrive/SignBridge_Data/metadata/MSASL_train.json",
+            "val": "/content/drive/MyDrive/SignBridge_Data/metadata/MSASL_val.json",
+            "test": "/content/drive/MyDrive/SignBridge_Data/metadata/MSASL_test.json",
+            "classes": "/content/drive/MyDrive/SignBridge_Data/metadata/MSASL_classes.json"
+        },
+        "landmarks": {
+            "train": "/content/drive/MyDrive/SignBridge_Data/sign_landmarks/train",
+            "val": "/content/drive/MyDrive/SignBridge_Data/sign_landmarks/val",
+            "test": "/content/drive/MyDrive/SignBridge_Data/sign_landmarks/test"
+        },
+        "speech": {
+            "raw_audio": "/content/drive/MyDrive/SignBridge_Data/speech/raw_audio",
+            "transcripts": "/content/drive/MyDrive/SignBridge_Data/speech/transcripts"
+        },
+        "models": {
+            "sign": "/content/drive/MyDrive/SignBridge_Data/models/sign",
+            "speech": "/content/drive/MyDrive/SignBridge_Data/models/speech"
+        }
+    },
+    "mediapipe": {
+        "holistic": {
+            "min_detection_confidence": 0.5,
+            "min_tracking_confidence": 0.5
+        },
+        "hands": {
+            "min_detection_confidence": 0.7,
+            "min_tracking_confidence": 0.7,
+            "max_num_hands": 2
+        }
+    },
+    "landmarks": {
+        "normalize_method": "min_max",  
+        "use_face": true,
+        "use_pose": true,
+        "use_hands": true,
+        "max_sequence_length": 300,
+        "sample_every_n": 2
+    },
+    "whisper": {
+        "model_size": "base", 
+        "language": "en", 
+        "beam_size": 5,
+        "use_fp16": true
+    },
+    "vosk": {
+        "model_size": "small"
+    },
+    "data_processing": {
+        "audio_sample_rate": 16000,
+        "audio_duration": 10,
+        "video_fps": 30,
+        "video_resolution": [640, 480],
+        "max_frames": 150
+    }
+}
