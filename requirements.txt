@@ -1,0 +1,12 @@
+mediapipe
+opencv-python
+tensorflow
+pytorch
+numpy
+pandas
+matplotlib
+fastapi
+uvicorn
+mlflow
+azure-storage-blob
+python-dotenv
