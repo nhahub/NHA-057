@@ -75,6 +75,8 @@ coverage.xml
 runs/
 logs/
 checkpoints/
+CV/checkpoints/
+wandb/
 *.ckpt
 *.pth
 *.h5
