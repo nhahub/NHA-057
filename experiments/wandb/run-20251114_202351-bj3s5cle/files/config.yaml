@@ -1,0 +1,72 @@
+_wandb:
+    value:
+        cli_version: 0.23.0
+        e:
+            n75safw89dgunewz2wxcrfj9ne70nuae:
+                codePath: CV\upload_history_to_wandb.py
+                codePathLocal: CV\upload_history_to_wandb.py
+                cpu_count: 2
+                cpu_count_logical: 4
+                disk:
+                    /:
+                        total: "126700482560"
+                        used: "125899481088"
+                email: khalednabil5000@gmail.com
+                executable: C:\Users\KH&H\AppData\Local\Programs\Python\Python311\python.exe
+                git:
+                    commit: e426b910e7ffeeb6ca0ae3b1b00d06afbf040b89
+                    remote: https://github.com/nhahub/NHA-057.git
+                host: KHALED
+                memory:
+                    total: "8467537920"
+                os: Windows-10-10.0.19045-SP0
+                program: C:\Users\KH&H\NHA-057\CV\upload_history_to_wandb.py
+                python: CPython 3.11.5
+                root: C:\Users\KH&H\NHA-057
+                startedAt: "2025-11-14T18:23:51.456097Z"
+                writerId: n75safw89dgunewz2wxcrfj9ne70nuae
+        m: []
+        python_version: 3.11.5
+        t:
+            "1":
+                - 1
+            "2":
+                - 1
+            "3":
+                - 2
+                - 13
+                - 15
+                - 16
+                - 61
+                - 62
+            "4": 3.11.5
+            "5": 0.23.0
+            "8":
+                - 2
+                - 3
+            "10":
+                - 21
+            "12": 0.23.0
+            "13": windows-amd64
+architecture:
+    value: I3D (InceptionI3d)
+augmentations:
+    value: 7
+best_epoch:
+    value: 44
+best_val_acc:
+    value: 87.67857142857143
+classes:
+    value: 100
+dataset:
+    value: Citizen-100
+input_shape:
+    value: (B, 3, 32, 224, 224)
+learning_rate:
+    value: 0.0001
+optimizer:
+    value: Adam
+scheduler:
+    value: ReduceLROnPlateau
+weight_decay:
+    value: 1e-08

@@ -105,20 +105,94 @@ class VideoClassificationDataset(Dataset):
         return frames
 
     def _maybe_augment(self, frames: list[np.ndarray]) -> list[np.ndarray]:
-        """Apply simple spatial augmentation if enabled.
+        """Apply video-level augmentation when `augment` is enabled.
 
-        This is intentionally conservative compared to the full Kaggle
-        notebook pipeline but can be extended as needed.
+        This mirrors the richer augmentation pipeline used in the
+        training notebook and operates directly on uint8 frames:
+
+        1. Horizontal flip (30% chance).
+        2. Temporal cropping to 75–100% of frames, then resample to
+           the original length.
+        3. Brightness adjustment (0.85–1.15×).
+        4. Contrast adjustment (0.85–1.15×).
+        5. Small rotation (±3°).
+        6. Spatial crop (85–100% area) + resize back to original size.
+        7. Gaussian noise (σ=5, 20% chance).
         """
 
         if not self.augment:
             return frames
 
-        # Example: random horizontal flip with 50% probability
-        if np.random.rand() < 0.5:
-            frames = [cv2.flip(f, 1) for f in frames]
+        # Stack to (T, H, W, C)
+        arr = np.stack(frames, axis=0)
+        T, H, W, C = arr.shape
+        original_T = T
 
-        return frames
+        # 1. Horizontal flip (30% chance)
+        if np.random.rand() < 0.3:
+            arr = np.flip(arr, axis=2).copy()
+
+        # 2. Temporal cropping (75–100% frames) + resample back to original_T
+        crop_ratio = np.random.uniform(0.75, 1.0)
+        num_frames = max(int(T * crop_ratio), 16)
+
+        if num_frames < T:
+            start_idx = np.random.randint(0, T - num_frames + 1)
+            cropped = arr[start_idx : start_idx + num_frames]
+            indices = np.linspace(0, num_frames - 1, original_T, dtype=int)
+            arr = cropped[indices]
+
+        # Refresh shape after possible temporal resampling
+        T, H, W, C = arr.shape
+
+        # 3. Brightness adjustment (0.85–1.15×)
+        brightness_factor = np.random.uniform(0.85, 1.15)
+        arr = np.clip(arr.astype(np.float32) * brightness_factor, 0, 255).astype(np.uint8)
+
+        # 4. Contrast adjustment (0.85–1.15×)
+        contrast_factor = np.random.uniform(0.85, 1.15)
+        mean = arr.mean()
+        arr = np.clip((arr.astype(np.float32) - mean) * contrast_factor + mean, 0, 255).astype(
+            np.uint8
+        )
+
+        # 5. Rotation (±3°)
+        angle = np.random.uniform(-3, 3)
+        center = (W // 2, H // 2)
+        M = cv2.getRotationMatrix2D(center, angle, 1.0)
+
+        rotated = np.zeros_like(arr)
+        for t in range(T):
+            rotated[t] = cv2.warpAffine(arr[t], M, (W, H), borderMode=cv2.BORDER_REPLICATE)
+        arr = rotated
+
+        # 6. Spatial crop (85–100% area) + resize
+        crop_ratio_spatial = np.random.uniform(0.85, 1.0)
+        crop_h = int(H * crop_ratio_spatial)
+        crop_w = int(W * crop_ratio_spatial)
+
+        top = np.random.randint(0, H - crop_h + 1) if crop_h < H else 0
+        left = np.random.randint(0, W - crop_w + 1) if crop_w < W else 0
+
+        cropped_frames = np.zeros_like(arr)
+        for t in range(T):
+            cropped = arr[t, top : top + crop_h, left : left + crop_w]
+            cropped_frames[t] = cv2.resize(cropped, (W, H), interpolation=cv2.INTER_LINEAR)
+        arr = cropped_frames
+
+        # 7. Gaussian noise (σ=5, 20% chance)
+        if np.random.rand() < 0.2:
+            noise = np.random.normal(0, 5, arr.shape).astype(np.float32)
+            arr = np.clip(arr.astype(np.float32) + noise, 0, 255).astype(np.uint8)
+
+        # Final safety: ensure temporal length matches original_T
+        if arr.shape[0] != original_T:
+            indices = np.linspace(0, arr.shape[0] - 1, original_T, dtype=int)
+            arr = arr[indices]
+
+        # Convert back to list of frames
+        frames_aug = [arr[t] for t in range(arr.shape[0])]
+        return frames_aug
 
     def __getitem__(self, index: int) -> Tuple[torch.Tensor, int]:  # type: ignore[override]
         row = self.df.iloc[index]

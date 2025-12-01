@@ -1,0 +1,28 @@
+{
+  "os": "Windows-10-10.0.19045-SP0",
+  "python": "CPython 3.11.5",
+  "startedAt": "2025-11-14T18:23:51.456097Z",
+  "program": "C:\\Users\\KH&H\\NHA-057\\CV\\upload_history_to_wandb.py",
+  "codePath": "CV\\upload_history_to_wandb.py",
+  "codePathLocal": "CV\\upload_history_to_wandb.py",
+  "git": {
+    "remote": "https://github.com/nhahub/NHA-057.git",
+    "commit": "e426b910e7ffeeb6ca0ae3b1b00d06afbf040b89"
+  },
+  "email": "khalednabil5000@gmail.com",
+  "root": "C:\\Users\\KH&H\\NHA-057",
+  "host": "KHALED",
+  "executable": "C:\\Users\\KH&H\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+  "cpu_count": 2,
+  "cpu_count_logical": 4,
+  "disk": {
+    "/": {
+      "total": "126700482560",
+      "used": "125899481088"
+    }
+  },
+  "memory": {
+    "total": "8467537920"
+  },
+  "writerId": "n75safw89dgunewz2wxcrfj9ne70nuae"
+}

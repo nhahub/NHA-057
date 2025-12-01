@@ -357,8 +357,9 @@ These are **not required** for running the current offline word-level I3D app, b
 
 `experiments/wandb/` contains historical **Weights & Biases** runs and logs.
 
-- This folder is typically **git-ignored** and excluded from lightweight deployments.
-- It is useful if you want to dig into training curves, hyperparameters, and run metadata.
+- This folder is versioned in this repository to expose full training curves, hyperparameters, and run metadata. Be aware it can be large; for very lightweight deployments you may choose to exclude it.
+- A key W&B run for the final 100-class I3D model (~87.6% top-1) is available at:  
+  https://wandb.ai/Sign_Bridge/Sign_Bridge/runs/bj3s5cle
 
 ---
 

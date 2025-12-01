@@ -1,0 +1,19 @@
+✅ W&B initialized!
+[34m[1mwandb[0m: [33mWARNING[0m The get_url method is deprecated and will be removed in a future release. Please use `run.url` instead.
+🌐 Dashboard: https://wandb.ai/Sign_Bridge/Sign_Bridge/runs/bj3s5cle
+
+============================================================
+UPLOADING TRAINING HISTORY
+============================================================
+📤 Uploaded epoch 10/44
+📤 Uploaded epoch 20/44
+📤 Uploaded epoch 30/44
+📤 Uploaded epoch 40/44
+📤 Uploaded epoch 44/44
+
+============================================================
+FINALIZING
+============================================================
+✅ All metrics uploaded successfully!
+📊 Total epochs logged: 44
+🌐 View your training curves at: https://wandb.ai/Sign_Bridge/Sign_Bridge/runs/bj3s5cle
