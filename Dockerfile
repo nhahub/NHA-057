@@ -16,6 +16,6 @@ RUN pip install --no-cache-dir --default-timeout=300 -r requirements-api.txt
 
 COPY . .
 
-EXPOSE 8000
+EXPOSE 7860
 
-CMD ["sh", "-c", "uvicorn api.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+CMD ["sh", "-c", "uvicorn api.main:app --host 0.0.0.0 --port ${PORT:-7860}"]
