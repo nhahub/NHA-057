@@ -10,8 +10,6 @@ This repository contains:
 - **Jupyter notebooks** for sign-to-text workflows and experimental speech-to-text pipelines.
 - **Archived experiments** (real-time prototypes, ISLR landmark models, W&B logs) under `experiments/`.
 
-The goal is to be both **demonstrable for a course project** and **structured like a professional AI application**.
-
 ---
 
 ## 1. Features
@@ -30,7 +28,7 @@ The goal is to be both **demonstrable for a course project** and **structured li
   - `notebooks/02_streaming_speech_to_text.ipynb` – streaming speech recognition prototype (for future integration).
 
 - **FastAPI inference service**
-  - Clean REST API for sign recognition using the I3D model.
+  - FastAPI-based HTTP API for sign recognition using the I3D model.
   - Easy to integrate with frontends or additional services.
 
 - **Well-structured experiments**
@@ -59,6 +57,7 @@ NHA-057/
 │   ├── data/                 # Video reader & transforms
 │   ├── models/               # I3D and model loading utilities
 │   ├── inference/            # High-level SignRecognizer wrapper
+│   ├── training/             # Datasets and training scripts for I3D
 │   └── scripts/              # Utility scripts (e.g., webcam test)
 │
 ├── notebooks/                # Main project notebooks (final workflows)
@@ -311,7 +310,26 @@ The CV module is designed to be **modular and reusable**:
   print(result.topk_glosses, result.topk_probabilities)
   ```
 
+- `CV/training/datasets.py` – Generic CSV/manifest-based video dataset class for training.
+- `CV/training/train_i3d.py` – CLI training script for (re)training or fine-tuning the I3D model.
 - `CV/scripts/test_webcam.py` – Example script to test live webcam sign capture (if configured).
+
+To train or fine-tune the I3D model on your own manifests, you can run, for example:
+
+```bash
+python -m CV.training.train_i3d \
+  --train-manifest /path/to/train_manifest.csv \
+  --val-manifest /path/to/val_manifest.csv \
+  --base-dir /path/to/videos_root \
+  --label-map CV/assets/label_mapping.json \
+  --epochs 50 \
+  --batch-size 8
+```
+
+The manifest CSVs must contain at least two columns:
+
+- `video_path` – path to each video file (relative to `base-dir` or absolute).
+- `label` – integer class id in `[0, num_classes-1]` consistent with the label mapping.
 
 This encapsulation makes it easy to:
 
@@ -344,27 +362,13 @@ These are **not required** for running the current offline word-level I3D app, b
 
 ---
 
-## 9. Development & Testing
+## 9. Flutter client applications
 
-### 9.1. Running tests (if configured)
+A dedicated Flutter team has developed full mobile/desktop client applications that consume the SignBridge backend:
 
-If you add tests (e.g., under `tests/`), you can run them with:
-
-```bash
-pytest
-```
-
-You can enable coverage reporting (if configured):
-
-```bash
-pytest --cov
-```
-
-### 9.2. Coding style
-
-- The codebase uses standard Python typing hints in critical modules.
-- Where applicable, follow **PEP8** and keep imports organized.
-- Notebooks serve as high-level documentation and prototypes; critical logic should live in Python modules under `CV/` and `api/`.
+- The Flutter apps provide the main user-facing UI.
+- They communicate with the FastAPI service and/or the Hugging Face-deployed I3D model.
+- This repository focuses on the backend, CV pipeline, and notebooks; the Flutter code lives in a separate repository.
 
 ---
 
@@ -373,20 +377,37 @@ pytest --cov
 Some ideas for future work and extensions:
 
 - **Multimodal fusion**
-  - Combine video-based sign recognition with audio-based speech recognition for robust multi-user interaction.
+  - Combine video-based sign recognition with audio-based speech recognition for robust multi-user interaction, for example via late fusion of I3D logits and speech model outputs.
 
 - **Real-time sign recognition**
-  - Integrate webcam capture + streaming I3D or lightweight models for real-time feedback.
+  - Explore low-latency pipelines using pose extraction models such as **MediaPipe Holistic** or **OpenPose** to obtain 2D/3D keypoints, then feed them to lightweight sequence models (e.g., BiLSTMs, TGCN/ST-GCN) or fuse pose features with I3D features for real-time feedback.
+
+- **Structured training pipeline**
+  - Further extend the existing `CV/training/` package with richer configs, advanced augmentation, and experiment management so others can easily reproduce, fine-tune, or compare models.
 
 - **More languages and domains**
   - Extend datasets and label mappings to additional sign languages or domain-specific vocabularies.
 
-- **Improved UIs**
-  - Build a full frontend (web or desktop) that consumes the FastAPI backend and offers an intuitive interface for users.
+---
+
+## 11. Datasets
+
+This project builds on publicly available datasets hosted on Kaggle:
+
+- **WLASL2000** – word-level American Sign Language videos  
+  Kaggle: https://www.kaggle.com/datasets/ngphmng/wlasl2000-dataset
+
+- **ASL Citizen** – crowd-sourced ASL signing videos  
+  Kaggle: https://www.kaggle.com/datasets/abd0kamel/asl-citizen
+
+- **Google - Isolated Sign Language Recognition (ASL Signs)** – Kaggle competition  
+  Competition page: https://www.kaggle.com/competitions/asl-signs
+
+> Depending on the experiment, we use subsets or combinations of these datasets (e.g., a 100-class subset of Citizen + WLASL for the final I3D model, and the ASL Signs competition landmarks for separate ISLR experiments).
 
 ---
 
-## 11. Acknowledgements
+## 12. Acknowledgements
 
 - The I3D architecture and many design choices are inspired by existing **sign language recognition research** and open-source implementations.
 - This project builds on widely-used open-source libraries: **PyTorch**, **FastAPI**, **OpenCV**, **MediaPipe**, and others listed in `requirements.txt`.
